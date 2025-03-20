@@ -1,7 +1,9 @@
+import AddMap from "@/components/addMap";
+
 export default function Location(){
     return(
         <div>
-            Add some locations
+            <AddMap />
         </div>
     )
 }
