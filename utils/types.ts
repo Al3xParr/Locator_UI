@@ -10,3 +10,8 @@ export type Location = {
     long: number,
     lat: number    
 }
+
+export interface AddMapProps {
+    markerLoc: google.maps.LatLng | null,
+    setMarkerLoc: Function
+}
