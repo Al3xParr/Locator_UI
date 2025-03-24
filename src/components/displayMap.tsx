@@ -1,80 +1,70 @@
 'use client'
 
-import { GoogleMap, useJsApiLoader, Marker, Polyline } from '@react-google-maps/api'
-import React from 'react'
+import { Map, APIProvider, AdvancedMarker, Pin } from '@vis.gl/react-google-maps'
+import React, { useState } from 'react'
 
 import { use } from 'react'
 import { LocationDTO } from '../../utils/types'
+import { Popover } from '@radix-ui/themes'
+import { Polyline } from './map/polyline'
 
 export default function DisplayMap({ locations }: { locations: Promise<LocationDTO[]> }) {
 
-    const { isLoaded } = useJsApiLoader({
-        id: 'google-map-script',
-        googleMapsApiKey: process.env.MAPS_API_KEY ?? ""
-    })
-    const all_locations = use(locations)
+    const allLocations = use(locations)
+    const firstLoc = allLocations.at(0)
+    const center = {lat: firstLoc?.lat ?? 53.283791, lng: firstLoc?.long ?? -1.668767}
 
-    const points = [] as google.maps.LatLng[]
+    const [points, setPoints] = useState<google.maps.LatLng[]>([])
 
-    //all_locations.forEach((loc: LocationDTO) => {
-    //    points.push(new google.maps.LatLng(loc.lat, loc.long))
-    //})
+    const [loading, setLoading] = useState<boolean>(true)
 
-    const containerStyle = {
-        width: '600px',
-        height: '600px',
+    function onLoad() {
+        setPoints([])
+        allLocations.forEach((loc: LocationDTO) => {
+            setPoints(points => [...points, new google.maps.LatLng(loc.lat, loc.long)])
+        })
+        setLoading(false)
     }
-
-    const center = {
-        lat: 53.283791,
-        lng: -1.668767,
-    }
-
-
-
-
-
-    const [map, setMap] = React.useState<google.maps.Map | null>(null)
-
-    const onLoad = React.useCallback(function callback(map: google.maps.Map) {
-
-        const bounds = new window.google.maps.LatLngBounds(center);
-        map.fitBounds(bounds);
-
-        setMap(map)
-    }, [])
-
-
-    const onUnmount = React.useCallback(function callback(map: google.maps.Map) {
-        setMap(null)
-    }, [])
 
     return (
-        <div>
-            {
-                isLoaded
-                    ?
-                    <GoogleMap
-                        mapContainerStyle={containerStyle}
-                        center={center}
-                        zoom={10}
-                        onLoad={onLoad}
-                        onUnmount={onUnmount}>
+        <div className='min-h-full min-w-full flex'>
 
+            <APIProvider apiKey={''} onLoad={onLoad} >
+                {loading ?
+                    <div className="bg-gray-200 animate-pulse rounded-2xl flex-1 m-8" />
+                    :
+
+                    <Map
+                        className='h-screen w-full'
+                        defaultCenter={center}
+                        defaultZoom={8}
+                        mapId={"1"}>
                         {
-                            all_locations.map((loc: LocationDTO, index) => {
-                                return (<Marker key={loc.id} position={{ lat: loc.lat, lng: loc.long }} />)
+                            allLocations.map((loc: LocationDTO, index) => {
+                                return (
+
+                                    <Popover.Root key={loc.id}>
+                                        <Popover.Trigger>
+                                            <AdvancedMarker key={loc.id} position={{ lat: loc.lat, lng: loc.long }}>
+                                                <Pin>
+                                                    {(index + 1).toString()}
+                                                </Pin>
+                                            </AdvancedMarker>
+                                        </Popover.Trigger>
+                                        <Popover.Content align='start'>
+                                            <div>{new Date(loc.time).toDateString()}</div>
+                                            <div>Latitude: {loc.lat}</div>
+                                            <div>Longitude: {loc.long}</div>
+                                        </Popover.Content>
+                                    </Popover.Root>
+                                )
                             })
                         }
+                        <Polyline strokeColor="#000000" strokeWeight={2} path={points} />
+                    </Map>
+                }
+            </APIProvider>
 
-                        <Polyline path={points} />
-
-                    </GoogleMap >
-                    :
-                    <div >Loading Map...</div>
-
-            }
         </div>
     )
-
 }

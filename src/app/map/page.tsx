@@ -1,6 +1,4 @@
-import { DATA_API } from "../../../utils/apis"
 import { LocationDTO } from "../../../utils/types"
-
 
 import { Suspense } from 'react'
 import DisplayMap from "@/components/displayMap"
@@ -18,9 +16,19 @@ export default async function Body() {
     const locations = get_location_data()
 
     return (
-        <Suspense fallback={<div>Loading Data...</div>}>
-            <DisplayMap locations={locations}/>
-        </Suspense>
+        <div className="grid grid-cols-2 grid-rows-1 w-full">
+            <div className="min-h-full w-full bg-secondary p-2 text-[230px]/50 align-middle font-title text-primary">
+                WHERE'S<br/>MY<br/>SON
+            </div>  
+            <div className="min-h-full w-full flex">
+                
+                <Suspense fallback={<div className="bg-gray-200 animate-pulse rounded-2xl flex-1 m-8"/>}>
+                    <DisplayMap locations={locations} />
+                </Suspense>
+            </div>
+        </div>
+
+
     )
 }
 
