@@ -34,27 +34,36 @@ export default function Location() {
 
             <AddMap markerLoc={markerLoc} setMarkerLoc={setMarkerLoc} />
 
-            <div className='bg-secondary p-5 flex flex-col'>
+            <div className='bg-secondary p-5 pb-0 flex flex-col'>
                 <div className="text-7xl font-bold">Add Location</div>
-                <div className="m-8">
-                    <div>Lat: {markerLoc?.lat() ?? 0}</div>
-                    <div>Long: {markerLoc?.lng() ?? 0}</div>
-                    <Button onClick={getLocationClick} className="font-title">Use My Location<MapPin /></Button>
+                <div className="m-5 flex items-center">
+                    <Button 
+                        onClick={getLocationClick} 
+                        className="font-title flex items-center"
+                        size={"4"}
+                        radius="large">
+                            <MapPin size={30}/>
+                    </Button>
+
+                    <div className="pl-5 align-middle tracking-wide text-lg">
+                        Latitude: {markerLoc?.lat() ?? 0}<br/>
+                        Longitude: {markerLoc?.lng() ?? 0}
+                    </div>
                 </div>
-                <div className={`border ${image ? "" : "border-dashed"} rounded-2xl min-h-[200px] max-h-[500px] overflow-clip flex justify-around relative`}>
+                <div className={`border ${image ? "" : "border-dashed"} rounded-2xl min-h-[200px] max-h-[500px] overflow-clip flex flex-col items-center justify-evenly relative`}>
                     {image ? 
                     <img src={window.URL.createObjectURL(image!)} alt="Image upload"/> 
                     : 
-                    <div className="flex flex-col w-full h-full items-center text-2xl ">
-                        <ImageUp className="" size={100}/>
-                        <div>Upload Image</div>
-                    </div>
+                    <>
+                        <ImageUp strokeWidth="1.8" size={100}/>
+                        <div className="text-2xl">Upload Image</div>
+                    </>
                     }
 
-                    <input className="text-secondary absolute h-full w-full" type="file" accept="image/png, image/jpeg" onChange={(e) => setImage(e.target.files![0])}/>
+                    <input className="text-transparent absolute h-full w-full cursor-pointer" type="file" accept="image/png, image/jpeg" onChange={(e) => setImage(e.target.files![0])}/>
 
                 </div>
-                <div className="flex">
+                <div className="flex mt-5">
                     <span className="flex-1"></span>
                     <Button onClick={locationSubmit} className="">
                         {submitting ? "Sending..." : "Add Location"}

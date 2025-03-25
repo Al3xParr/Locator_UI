@@ -2,7 +2,8 @@ export type LocationDTO = {
     id: number,
     time: string,
     long: number,
-    lat: number
+    lat: number,
+    image_name: string
 }
 
 export type Location = {

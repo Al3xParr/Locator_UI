@@ -18,7 +18,7 @@ export default async function Body() {
     return (
         <div className="grid grid-cols-2 grid-rows-1 w-full">
             <div className="min-h-full w-full bg-secondary p-2 text-[230px]/50 align-middle font-title text-primary">
-                WHERE'S<br/>MY<br/>SON
+                WHERE'S<br/>MY<br/>SON?
             </div>  
             <div className="min-h-full w-full flex">
                 

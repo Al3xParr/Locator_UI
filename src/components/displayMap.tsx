@@ -8,15 +8,20 @@ import { LocationDTO } from '../../utils/types'
 import { Popover } from '@radix-ui/themes'
 import { Polyline } from './map/polyline'
 
+
 export default function DisplayMap({ locations }: { locations: Promise<LocationDTO[]> }) {
 
     const allLocations = use(locations)
     const firstLoc = allLocations.at(0)
-    const center = {lat: firstLoc?.lat ?? 53.283791, lng: firstLoc?.long ?? -1.668767}
+    const center = { lat: firstLoc?.lat ?? 53.283791, lng: firstLoc?.long ?? -1.668767 }
 
     const [points, setPoints] = useState<google.maps.LatLng[]>([])
 
     const [loading, setLoading] = useState<boolean>(true)
+
+    const [imageData, setImageData] = useState<Blob>()
+    const [imageLoading, setImageLoading] = useState<boolean>(true)
+    const [lastClickedLocation, setLastClickedLocation] = useState<number>()
 
     function onLoad() {
         setPoints([])
@@ -24,6 +29,24 @@ export default function DisplayMap({ locations }: { locations: Promise<LocationD
             setPoints(points => [...points, new google.maps.LatLng(loc.lat, loc.long)])
         })
         setLoading(false)
+    }
+
+    async function locationClick(id: number) {
+        if (lastClickedLocation == id){ return }
+
+        setImageLoading(true)
+        setLastClickedLocation(id)
+
+        await fetch("http://localhost:8000/image_return", {
+            method: "POST",
+            headers: { 'accept': 'application/json', 'Content-Type': 'application/json' },
+            body: JSON.stringify({ location_id: id })
+        }).then(async (res) => {
+                if (!res.body) {return}
+                const blob = await new Response(res.body).blob()
+                setImageData(blob)
+            })
+        setImageLoading(false)
     }
 
     return (
@@ -44,7 +67,7 @@ export default function DisplayMap({ locations }: { locations: Promise<LocationD
                                 return (
 
                                     <Popover.Root key={loc.id}>
-                                        <Popover.Trigger>
+                                        <Popover.Trigger onClick={(e) => locationClick(loc.id)}>
                                             <AdvancedMarker key={loc.id} position={{ lat: loc.lat, lng: loc.long }}>
                                                 <Pin>
                                                     {(index + 1).toString()}
@@ -55,6 +78,9 @@ export default function DisplayMap({ locations }: { locations: Promise<LocationD
                                             <div>{new Date(loc.time).toDateString()}</div>
                                             <div>Latitude: {loc.lat}</div>
                                             <div>Longitude: {loc.long}</div>
+                                            {imageLoading ? <div>loading...</div>
+                                                : <img className='max-h-[100px] max-w-[100px]' src={URL.createObjectURL(imageData!)}></img>
+                                            }
                                         </Popover.Content>
                                     </Popover.Root>
                                 )
