@@ -1,36 +1,29 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Where's My Son?
 
-## Getting Started
+For 8 months in 2024/25 I solo travelled around the UK and Europe in a campervan visiting a variety of places. Many of my family and friends were interested in where I had been and were concerned for my safety due to mebeing on my own. While location tracking services are available, such as Google Maps, I didn't want people constantly being able to see where I was to maintain some independance and sense of adventure.
 
-First, run the development server:
+My solution was a web app that allowed me to mark my location whenever I chose to which others could then look at. The addition of an image for each location and a timestamp also means an interesting log of all the places I have visited gets created.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+I wanted to use this small project to reaquaint myself with web development and further my understanding of React.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Technologies
+For the back end of this project I opted to use **FastAPI** due to its rapid development time and the limited requirements for that part of the system to meet.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The database is in **SQLite** as not much data is needed to be stored in it and its integration with FastAPI well documented.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The front end is written in **Typescript** using the **React** framework as I have used React before and wanted to become more profficient with it.
 
-## Learn More
+## How To Run
 
-To learn more about Next.js, take a look at the following resources:
+## Example screenshots
+![screenshot1](screenshots/Screenshot%20from%202025-03-27%2019-12-59.png "Screenshot1")
+Main Page for viewing locations on the map
+![screenshot2](screenshots/Screenshot%20from%202025-03-27%2019-13-27.png "Screenshot2")
+Example of clicked location, showing latitude, longitude, timestamp and an image
+![screenshot3](screenshots/Screenshot%20from%202025-03-27%2019-14-05.png "Screenshot3")
+Example of clicked location, showing latitude, longitude, timestamp and an image
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Potential Future Development
+- Login system to allow multiple different users to log their journeys
+- Deploy on the open web using a containerisation software such as Docker
+- Animations between web pages to provide a smoother user experience
